@@ -3,27 +3,37 @@
 class HighScores
   attr_reader :scores
 
-  def initialize(scores = [])
+  def initialize(scores)
     @scores = scores
   end
 
   def latest
-    @scores[-1]
+    scores.last
   end
 
   def personal_best
-    @scores.max
+    scores.max
   end
 
   def personal_top
-    @scores.sort_by { |num| -num }[0..2]
+    scores.max(3)
   end
 
   def report
-    last = latest
-    best = personal_best
-    str = "Your latest score was #{latest}."
-    return str + " That's your personal best!" if last >= best
-    str + " That's #{best - last} short of your personal best!"
+    "Your latest score was #{latest}. " + praise_and_encouragement
+  end
+
+  private
+
+  def praise_and_encouragement
+    if latest_personal_best?
+      "That's your personal best!"
+    else
+      "That's #{personal_best - latest} short of your personal best!"
+    end
+  end
+
+  def latest_personal_best?
+    latest >= personal_best
   end
 end
